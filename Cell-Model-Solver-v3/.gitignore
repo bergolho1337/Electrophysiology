@@ -1,0 +1,4 @@
+bin/
+build/
+shared_libs/
+tmp*/

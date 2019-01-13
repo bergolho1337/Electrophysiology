@@ -1,0 +1,8 @@
+ * STATES[0] is V in component membrane (mV).
+ * STATES[1] is m in component sodium_current_m_gate (dimensionless).
+ * STATES[2] is h in component sodium_current_h_gate (dimensionless).
+ * STATES[3] is j in component sodium_current_j_gate (dimensionless).
+ * STATES[4] is Cai in component slow_inward_current (concentration_units).
+ * STATES[5] is d in component slow_inward_current_d_gate (dimensionless).
+ * STATES[6] is f in component slow_inward_current_f_gate (dimensionless).
+ * STATES[7] is x1 in component time_dependent_outward_current_x1_gate (dimensionless).

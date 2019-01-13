@@ -1,0 +1,10 @@
+ * CONSTANTS[0] is C in component membrane (uF_per_mm2).
+ * CONSTANTS[1] is g_Na in component sodium_current (mS_per_mm2).
+ * CONSTANTS[2] is E_Na in component sodium_current (mV).
+ * CONSTANTS[3] is g_Nac in component sodium_current (mS_per_mm2).
+ * CONSTANTS[4] is g_s in component slow_inward_current (mS_per_mm2).
+ * CONSTANTS[5] is IstimStart in component stimulus_protocol (ms).
+ * CONSTANTS[6] is IstimEnd in component stimulus_protocol (ms).
+ * CONSTANTS[7] is IstimAmplitude in component stimulus_protocol (uA_per_mm2).
+ * CONSTANTS[8] is IstimPeriod in component stimulus_protocol (ms).
+ * CONSTANTS[9] is IstimPulseDuration in component stimulus_protocol (ms).

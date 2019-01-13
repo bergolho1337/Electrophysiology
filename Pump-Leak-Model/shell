@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ -f main ]; then
+  make clear
+fi
+
+make
+./main > data.dat
+python plot.py
+
+exit 1

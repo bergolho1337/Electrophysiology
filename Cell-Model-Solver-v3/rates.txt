@@ -1,0 +1,8 @@
+ * RATES[0] is d/dt V in component membrane (mV).
+ * RATES[1] is d/dt m in component sodium_current_m_gate (dimensionless).
+ * RATES[2] is d/dt h in component sodium_current_h_gate (dimensionless).
+ * RATES[3] is d/dt j in component sodium_current_j_gate (dimensionless).
+ * RATES[4] is d/dt Cai in component slow_inward_current (concentration_units).
+ * RATES[5] is d/dt d in component slow_inward_current_d_gate (dimensionless).
+ * RATES[6] is d/dt f in component slow_inward_current_f_gate (dimensionless).
+ * RATES[7] is d/dt x1 in component time_dependent_outward_current_x1_gate (dimensionless).
