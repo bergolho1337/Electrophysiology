@@ -1,0 +1,7 @@
+set(SOURCE_FILES_STIMULI stimuli.h stimuli.cpp)
+
+ADD_LIBRARY(stimuli STATIC ${SOURCE_FILES_STIMULI})
+
+if(NOT MSVC)
+    set_property(TARGET stimuli PROPERTY POSITION_INDEPENDENT_CODE ON)
+endif()
