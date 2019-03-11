@@ -1,0 +1,7 @@
+set(SOURCE_FILES_PLOT plot.h plot.cpp)
+
+ADD_LIBRARY(plot STATIC ${SOURCE_FILES_PLOT})
+
+if(NOT MSVC)
+    set_property(TARGET plot PROPERTY POSITION_INDEPENDENT_CODE ON)
+endif()

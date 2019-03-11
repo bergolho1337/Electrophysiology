@@ -7,9 +7,9 @@
 #include <cstdlib>
 #include <cmath>
 
-#include "utils.h"
-#include "config.h"
-#include "monodomain.h"
+#include "../utils/utils.h"
+#include "../config/config.h"
+#include "../monodomain/monodomain.h"
 
 struct plot_config
 {
@@ -23,10 +23,5 @@ struct plot_config* new_plot_config ();
 void free_plot_config (struct plot_config *plotter);
 
 void configure_plot_from_options (struct plot_config *plotter, struct monodomain_solver *solver, struct user_options *options);
-
-//void configure_solver_from_options (struct monodomain_solver *solver, struct user_options *options);
-//void print_monodomain_solver (const struct monodomain_solver *solver);
-
-
 
 #endif

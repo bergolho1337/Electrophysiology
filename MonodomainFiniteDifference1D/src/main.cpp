@@ -41,12 +41,7 @@
 #include <fstream>
 #include <omp.h>
 
-#include "../include/timer.h"
-#include "../include/config.h"
-#include "../include/utils.h"
-#include "../include/plot.h"
-#include "../include/stimuli.h"
-#include "../include/monodomain.h"
+#include "monodomain/monodomain.h"
 
 using namespace std;
 
@@ -81,7 +76,7 @@ int main (int argc, char *argv[])
 
 	// OpenMP configuration
 	omp_set_dynamic(0);
-    	omp_set_num_threads(2);
+    omp_set_num_threads(4);
 
 	print_configuration_parameters(solver->dx,solver->dt,solver->tmax,solver->lmax,\
 					solver->Ncell,solver->Niter,Nodes,\

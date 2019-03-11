@@ -59,6 +59,8 @@ void read_input_file(struct user_options *options, const char filename[])
 void print_user_options (const struct user_options *options)
 {
 	printf("[MAIN]\n");
+	printf("[Config] cell_length = %.10lf\n",options->cell_length);
+	printf("[Config] num_cell_div = %d\n",options->num_cell_div);
 	printf("[Config] dx = %.10lf\n",options->dx);
 	printf("[Config] dt = %.10lf\n",options->dt);	
 	printf("[Config] tmax = %.10lf\n",options->tmax);

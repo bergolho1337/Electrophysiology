@@ -6,7 +6,7 @@ using namespace std;
 
 const int MAX_SIZE = 500;
 const double DT = 0.01;
-const double N_CYCLES = 200.0;
+const double N_CYCLES = 20.0;
 
 int SST_RATE = nearbyint(N_CYCLES/DT);
 

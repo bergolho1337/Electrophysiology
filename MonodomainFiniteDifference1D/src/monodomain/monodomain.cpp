@@ -1,4 +1,4 @@
-#include "../include/monodomain.h"
+#include "monodomain.h"
 
 struct monodomain_solver* new_monodomain_solver ()
 {

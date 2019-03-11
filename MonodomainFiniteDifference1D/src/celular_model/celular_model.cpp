@@ -1,7 +1,7 @@
 // Here we are considering the Noble model for Purkinje fibers from 1962.
 // TODO: Implement a generic way to include other celular models (see New-Fenton-Experiment code ...)
 
-#include "../include/celular_model.h"
+#include "celular_model.h"
 
 void compute_initial_conditions (double *sv, const int Ncell, const int Nodes)
 {

@@ -1,4 +1,4 @@
-#include "../include/utils.h"
+#include "utils.h"
 
 void write_VTK_to_file (const double *sv, const double dx,\
                         const int Ncell, const int Nodes,\

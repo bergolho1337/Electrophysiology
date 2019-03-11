@@ -9,12 +9,12 @@
 #include <cmath>
 #include <omp.h>
 
-#include "celular_model.h"
-#include "config.h"
-#include "stimuli.h"
-#include "plot.h"
-#include "timer.h"
-#include "utils.h"
+#include "../celular_model/celular_model.h"
+#include "../config/config.h"
+#include "../stimuli/stimuli.h"
+#include "../plot/plot.h"
+#include "../utils/timer.h"
+#include "../utils/utils.h"
 
 #define OUTPUT_VTK			// Flag used to control if we will be writing the output to a VTK file (Paraview visualization)
 

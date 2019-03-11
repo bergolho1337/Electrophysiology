@@ -1,4 +1,4 @@
-#include "../include/stimuli.h"
+#include "stimuli.h"
 
 struct stim_config* new_stim_config ()
 {

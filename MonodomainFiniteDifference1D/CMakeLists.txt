@@ -21,21 +21,16 @@ IF (OPENMP_FOUND)
     #message("${CMAKE_CXX_FLAGS}")
 ENDIF(OPENMP_FOUND)
 
-INCLUDE_DIRECTORIES(include)
+ADD_SUBDIRECTORY(src/celular_model)
+ADD_SUBDIRECTORY(src/config)
+ADD_SUBDIRECTORY(src/monodomain)
+ADD_SUBDIRECTORY(src/plot)
+ADD_SUBDIRECTORY(src/stimuli)
+ADD_SUBDIRECTORY(src/utils)
 
-FILE(GLOB SOURCES "src/*.cpp")
+ADD_EXECUTABLE(FDMMonodomain1D src/main.cpp)
 
-ADD_EXECUTABLE(FDMMonodomain1D ${SOURCES}) 
+ADD_DEPENDENCIES(FDMMonodomain1D config monodomain plot stimuli cell_model utils)
 
-#ADD_DEPENDENCIES(FDMMonodomain1D utils solvers hashes ini_parser string )
-
-TARGET_LINK_LIBRARIES(FDMMonodomain1D m)
-
-#ADD_SUBDIRECTORY(src/models_library)
-
-#SET(COMMON_SRC ../libraries_common/config_helpers.c ../libraries_common/config_helpers.h)
-
-#ADD_SUBDIRECTORY(src/stimuli_library)
-###
-
+TARGET_LINK_LIBRARIES(FDMMonodomain1D config monodomain plot stimuli cell_model utils dl m)
 

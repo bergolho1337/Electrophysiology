@@ -12,6 +12,8 @@ struct user_options
 {
 	// Finite difference configuration section
 	double dx;
+	double cell_length;
+	int num_cell_div;
 	double dt;
 	double tmax;
 	double lmax;
@@ -40,6 +42,7 @@ struct user_options* new_user_options ();
 void free_user_options (struct user_options *options);
 
 void read_input_file(struct user_options *options, const char filename[]);
+
 void print_user_options (const struct user_options *options);
 
 #endif

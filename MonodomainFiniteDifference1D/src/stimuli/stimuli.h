@@ -6,8 +6,8 @@
 #include <cstdlib>
 #include <cmath>
 
-#include "config.h"
-#include "utils.h"
+#include "../config/config.h"
+#include "../utils/utils.h"
 
 struct stim_config
 {
