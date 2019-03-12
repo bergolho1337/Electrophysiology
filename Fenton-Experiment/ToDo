@@ -1,0 +1,6 @@
+- Implement FVMMonodomain1D considering a cylinder as control volume (Explicit)
+- Add the option to divide the cell into multiple control volumes (add a [cell] section)
+- Consider the gap junctions in the process
+	- If "num_div_cell = 0" consider "dx = cell_length", else "dx = cell_length / num_div_cell"
+	- If "cell_id % num_div_cell == 0" then "link_type = GAP_JUNCTION", else "link_type = CYTOPLASM"
+

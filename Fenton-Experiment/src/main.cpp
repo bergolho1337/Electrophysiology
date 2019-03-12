@@ -10,6 +10,7 @@
 // 	- Model-based control of cardiac alternans in Purkinje fibers from Alejandro Garzón and Roman O. Grigoriev (2011)
 //	- Spatiotemporal control of cardiac alternans from Blas Echebarria, and Alain Karma (2002)
 //
+//
 // The system of ODE's from the celular model has been solved using the Standart Euler Scheme 
 // and by using OpenMP.
 //
