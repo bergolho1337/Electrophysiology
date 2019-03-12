@@ -3,6 +3,8 @@
 //
 // This program solves the 1D Monodomain equation using a Finite Volume approach and 
 // the Noble celular model from 1962.
+//
+// The Finite Volume method was implemented using an Explicit operator.
 // 
 // The objective of this project is to reproduce the results from the papers
 // 	- Model-based control of cardiac alternans in Purkinje fibers from Alejandro Garzón and Roman O. Grigoriev (2011)
@@ -81,7 +83,7 @@ int main (int argc, char *argv[])
 
 	// OpenMP configuration
 	omp_set_dynamic(0);
-    omp_set_num_threads(4);
+    omp_set_num_threads(2);
 
 	print_configuration_parameters(solver->dx,solver->dt,solver->tmax,solver->lmax,\
 					solver->Ncell,solver->Niter,Nodes,\

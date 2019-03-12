@@ -1,8 +1,8 @@
 #include "monodomain.h"
 
-static inline double ALPHA (double dt, double h) 
+static inline double ALPHA (double dt, double h, double D) 
 {
-    return (pow (h, 3.0)) / dt;
+    return ( D * dt) / ( pow(h,2.0) );
 }
 
 struct monodomain_solver* new_monodomain_solver ()
@@ -64,6 +64,9 @@ void solve_monodomain (struct monodomain_solver *solver,\
 	int Ncell = solver->Ncell;
 	int Niter = solver->Niter;
 
+	static const double D = 2.5e-04;
+	double alpha = ALPHA(D,dx,dt);
+
 	int print_rate = plotter->print_rate;
 	int sst_rate = plotter->sst_rate;
 	std::ofstream *plot_files = plotter->plot_files;
@@ -75,17 +78,6 @@ void solve_monodomain (struct monodomain_solver *solver,\
 
 	std::string sst_filename = solver->sst_filename; 
 	
-	// Assembly matrix for the linear system
-	Eigen::SparseMatrix<double> A(Ncell,Ncell);
-	assembly_matrix(A,dx,dt,Ncell);
-
-	// Apply a LU decomposition over the matrix
-    Eigen::SparseLU< Eigen::SparseMatrix<double> > sparseSolver(A);
-
-	// Declare RHS and the solution vector
-    Eigen::VectorXd b(Ncell);
-    Eigen::VectorXd x(Ncell);
-
 	// Initial conditions configuration
 	if (solver->use_steady_state)
 		read_initial_conditions_from_file(sv,Ncell,Nodes,sst_filename);
@@ -117,12 +109,9 @@ void solve_monodomain (struct monodomain_solver *solver,\
 		compute_stimulus(stim,stim_current,t,Ncell,dx);
 		//print_stimulus(stim_current,Ncell,dx);
 		
-		assembly_load_vector(b,sv,dx,dt,Ncell,Nodes);
+		solve_diffusion(sv,vm,alpha,Ncell,Nodes);
 
-		//x = sparseSolver.solve(b);
-		solve_diffusion(sparseSolver,x,b);
-
-		update_state_vector(sv,x,Ncell,Nodes);		
+		update_state_vector(sv,vm,Ncell,Nodes);		
 		
 		solve_reaction(sv,stim_current,t,Ncell,Nodes,dt);
 
@@ -135,21 +124,34 @@ void solve_monodomain (struct monodomain_solver *solver,\
 	printf("%s\n",PRINT_LINE);
 }
 
-void solve_diffusion (Eigen::SparseLU< Eigen::SparseMatrix<double> > &sparseSolver,\
-					  Eigen::VectorXd &x,\
-					  Eigen::VectorXd b)
+void solve_diffusion (const double *sv, double *vm, const double alpha, const int ncell, const int nodes)
 {
-	// Solve the linear system
-	x = sparseSolver.solve(b);
+	// Explicit:
+	#pragma omp parallel for
+	for (int i = 0; i < ncell; i++)
+	{
+		// Case 1: First volume
+		if (i == 0)
+			vm[i] = alpha*( sv[nodes*(i+1)] - sv[nodes*i] ) + sv[nodes*i];
+		// Case 2: Last volume
+		else if (i == ncell-1)
+			vm[i] = alpha*( sv[nodes*(i-1)] - sv[nodes*i] ) + sv[nodes*i];
+		// Case 3: Middle volume
+		else
+			vm[i] = alpha*( sv[nodes*(i-1)] + sv[nodes*(i+1)] - 2.0*sv[nodes*i] ) + sv[nodes*i];
+	}	
+
+	// Implicit: Solve the linear system
+	//x = sparseSolver.solve(b);
 }
 
-void update_state_vector (double *sv, Eigen::VectorXd vm,\
+void update_state_vector (double *sv, const double *vm,\
 			  const int np, const int nodes)
 {
 	#pragma omp parallel for
 	for (int i = 0; i < np; i++)
 	{
-		sv[i*nodes] = vm(i);
+		sv[i*nodes] = vm[i];
 	}
 
 	//for (int i = 0; i < np; i++)
@@ -176,6 +178,7 @@ void solve_reaction (double *sv, double *stims, const double t,\
 	
 }
 
+/*
 void assembly_matrix (Eigen::SparseMatrix<double> &A, const double h, const double dt,\
 						const int ncell)
 {
@@ -235,7 +238,9 @@ void assembly_matrix (Eigen::SparseMatrix<double> &A, const double h, const doub
 	A.setFromTriplets(coeff.begin(),coeff.end());
     A.makeCompressed();
 }
+*/
 
+/*
 void assembly_load_vector (Eigen::VectorXd &b, const double *sv,
 						const double h, const double dt, const int ncell, const int nodes)
 {
@@ -244,6 +249,7 @@ void assembly_load_vector (Eigen::VectorXd &b, const double *sv,
 	for (int i = 0; i < ncell; i++)
 		b(i) = ALPHA(dt,h)*sv[nodes*i];
 }
+*/
 
 void print_monodomain_solver (const struct monodomain_solver *solver)
 {

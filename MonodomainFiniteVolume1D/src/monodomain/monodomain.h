@@ -56,10 +56,9 @@ void solve_monodomain (struct monodomain_solver *solver,\
 			struct stim_config *stim,\
 			struct plot_config *plotter);
 
-void solve_diffusion (Eigen::SparseLU< Eigen::SparseMatrix<double> > &sparseSolver,\
-					  Eigen::VectorXd &x,\
-					  Eigen::VectorXd b);
-void update_state_vector (double *sv, Eigen::VectorXd vm,\
+void solve_diffusion (const double *sv, double *vm, const double alpha, const int ncell, const int nodes);
+
+void update_state_vector (double *sv, const double *vm,\
 			  const int np, const int nodes);
 void solve_reaction (double *sv, double *stims, const double t,\
 		     const int np, const int nodes, const double dt);
