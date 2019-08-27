@@ -1,0 +1,7 @@
+bin/
+build/
+shared_libs/
+tmp*/
+vtk/
+output/
+output.sst

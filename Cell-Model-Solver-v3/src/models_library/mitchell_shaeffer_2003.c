@@ -1,4 +1,4 @@
-#include "mitchell_shaeffer.h"
+#include "mitchell_shaeffer_2003.h"
 
 GET_CELL_MODEL_DATA(init_cell_model_data) {
 

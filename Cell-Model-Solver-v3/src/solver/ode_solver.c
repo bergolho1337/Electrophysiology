@@ -175,7 +175,7 @@ void solve_celular_model (struct ode_solver *solver, struct user_options *option
         ode_total_time += stop_stop_watch (&ode_time);
 
         count++;
-        cur_time += dt_edo;
+        cur_time = count*dt_edo;
 
     }
 

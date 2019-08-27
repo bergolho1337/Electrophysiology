@@ -1,10 +1,10 @@
 SET(LIB_TYPE MODULE) #set the lib type
 
-############## MITCHELL SHAEFFER 2002 ##############################
-set(MODEL_FILE_CPU "mitchell_shaeffer.c")
-set(COMMON_HEADERS model_common.h mitchell_shaeffer.h)
+############## MITCHELL SHAEFFER 2003 ##############################
+set(MODEL_FILE_CPU "mitchell_shaeffer_2003.c")
+set(COMMON_HEADERS model_common.h mitchell_shaeffer_2003.h)
 
-ADD_LIBRARY(mitchell_shaeffer ${LIB_TYPE} ${COMMON_HEADERS} ${MODEL_FILE_CPU})
+ADD_LIBRARY(mitchell_shaeffer_2003 ${LIB_TYPE} ${COMMON_HEADERS} ${MODEL_FILE_CPU})
 
 #########################################################
 
@@ -29,6 +29,14 @@ set(MODEL_FILE_CPU "beeler_reuter_1977.c")
 set(COMMON_HEADERS model_common.h beeler_reuter_1977.h)
 
 ADD_LIBRARY(beeler_reuter_1977 ${LIB_TYPE} ${COMMON_HEADERS} ${MODEL_FILE_CPU})
+
+#########################################################
+
+############## DIFRANCESCO 1985 ##############################
+set(MODEL_FILE_CPU "difrancesco_1985.c")
+set(COMMON_HEADERS model_common.h difrancesco_1985.h)
+
+ADD_LIBRARY(difrancesco_1985 ${LIB_TYPE} ${COMMON_HEADERS} ${MODEL_FILE_CPU})
 
 #########################################################
 
