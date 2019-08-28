@@ -18,6 +18,7 @@ def write_solution ():
     #plt.xlim([10000,20000])
     #plt.xlim([20000,30000])
     #plt.xlim([30000,40000])
+    #plt.ylim([-90,40])
     #plt.xlim([2400,3000])
     plt.title(u"Action Potential",fontsize=14)
     plt.legend(loc=0,fontsize=14)

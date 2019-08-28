@@ -1,1 +1,3 @@
-- Solve the bug on the Di & Francesco model
+- Add the option to save the steady-state of the cell
+- Implement the calculus of the APD
+- Implement the restitution curve calculus

@@ -40,3 +40,18 @@ ADD_LIBRARY(difrancesco_1985 ${LIB_TYPE} ${COMMON_HEADERS} ${MODEL_FILE_CPU})
 
 #########################################################
 
+############## ARPF 2009 ##############################
+set(MODEL_FILE_CPU "stewart_aslanidi_noble_2009.c")
+set(COMMON_HEADERS model_common.h stewart_aslanidi_noble_2009.h)
+
+ADD_LIBRARY(stewart_aslanidi_noble_2009 ${LIB_TYPE} ${COMMON_HEADERS} ${MODEL_FILE_CPU})
+
+#########################################################
+
+############## LI & RUDY 2011 ##############################
+set(MODEL_FILE_CPU "li_rudy_2011.c")
+set(COMMON_HEADERS model_common.h li_rudy_2011.h)
+
+ADD_LIBRARY(li_rudy_2011 ${LIB_TYPE} ${COMMON_HEADERS} ${MODEL_FILE_CPU})
+
+#########################################################
