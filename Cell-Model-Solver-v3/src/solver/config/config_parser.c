@@ -96,6 +96,12 @@ struct user_options *new_user_options ()
     user_args->print_rate = 1;
     user_args->print_rate_was_set = false;
 
+    user_args->save_state_rate = -1;
+    user_args->save_state_rate_was_set = false;
+
+    user_args->out_save_state_dir_name = NULL;
+    user_args->out_save_state_dir_name_was_set = false;
+
     user_args->max_its = 50;
     user_args->max_its_was_set = false;
 
@@ -381,6 +387,12 @@ int parse_config_file (void *user, const char *section, const char *name, const 
     } else if (MATCH_SECTION_AND_NAME (MAIN_SECTION, "print_rate")) {
         pconfig->print_rate = (int)strtol (value, NULL, 10);
         pconfig->print_rate_was_set = true;
+    } else if (MATCH_SECTION_AND_NAME (MAIN_SECTION, "save_state_rate")) {
+        pconfig->save_state_rate = (int)strtol (value, NULL, 10);
+        pconfig->save_state_rate_was_set = true;
+    } else if (MATCH_SECTION_AND_NAME (MAIN_SECTION, "save_state_dir")) {
+        pconfig->out_save_state_dir_name = strdup(value);
+        pconfig->out_save_state_dir_name_was_set = true;
     } else if (MATCH_SECTION_AND_NAME (MAIN_SECTION, "output_dir")) {
         pconfig->out_dir_name = strdup(value);
         pconfig->out_dir_name_was_set = true;

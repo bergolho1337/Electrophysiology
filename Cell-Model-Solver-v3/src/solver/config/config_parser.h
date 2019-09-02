@@ -44,6 +44,10 @@ struct user_options
     bool adaptive_was_set;
     int print_rate;	            	/*-p option */
     bool print_rate_was_set;
+    int save_state_rate;
+    bool save_state_rate_was_set;
+    char *out_save_state_dir_name;	            /*-o option */
+    bool out_save_state_dir_name_was_set;
     int max_its;					/*-m option*/
     bool max_its_was_set;
     double ref_bound;				/*-r option*/

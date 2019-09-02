@@ -140,6 +140,9 @@ void solve_celular_model (struct ode_solver *solver, struct user_options *option
 
     int print_rate = options->print_rate;
 
+    bool save_state = options->save_state_rate_was_set;
+    int save_state_rate = options->save_state_rate;
+
     //if (stimuli_configs)
     //    set_spatial_stim(stimuli_configs);
 
@@ -165,6 +168,14 @@ void solve_celular_model (struct ode_solver *solver, struct user_options *option
 
                 total_write_time += stop_stop_watch (&write_time);
 
+            }
+        }
+
+        if (save_state)
+        {
+            if ((count+1) % save_state_rate == 0)
+            {
+                print_state_variables(solver,options->out_save_state_dir_name,count,cur_time);
             }
         }
 
@@ -425,4 +436,21 @@ void print_cell (const struct ode_solver *solver, FILE *output_file, double cur_
             fprintf(output_file,"%g ", sv[i]);
         fprintf(output_file,"%g\n",sv[nedos-1]);
     }
+}
+
+void print_state_variables (const struct ode_solver *solver, const char filename[], int count, double cur_time)
+{
+    FILE *file = fopen(filename,"w+");
+
+    int nodes = solver->model_data.number_of_ode_equations;
+    real *sv = solver->sv;
+    
+    fprintf(file,"Time = %g\n",cur_time);
+    for (int i = 0; i < nodes-1; i++)
+    {
+        fprintf(file,"%g ", sv[i]);
+    }
+    fprintf(file,"%g\n", sv[nodes-1]);
+
+    print_to_stdout_and_file("State variables saved! Iteration = %d -- Time = %g\n",count,cur_time);
 }

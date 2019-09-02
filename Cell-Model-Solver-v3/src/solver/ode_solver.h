@@ -56,5 +56,6 @@ void print_solver_info (struct ode_solver *solver, struct user_options *options)
 
 void print_result(const struct ode_solver *solver, const struct user_options *configs, int count, double cur_time, bool save_in_binary, FILE *output_file);
 void print_cell (const struct ode_solver *solver, FILE *output_file, double cur_time, bool save_in_binary);
+void print_state_variables (const struct ode_solver *solver, const char filename[], int count, double cur_time);
 
 #endif //MONOALG3D_EDO_SOLVER_H

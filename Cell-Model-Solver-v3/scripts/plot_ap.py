@@ -22,8 +22,8 @@ def write_solution ():
     #plt.xlim([2400,3000])
     plt.title(u"Action Potential",fontsize=14)
     plt.legend(loc=0,fontsize=14)
-    #plt.show()
-    plt.savefig("output.pdf")
+    plt.show()
+    #plt.savefig("output.pdf")
 
 def main():
 
