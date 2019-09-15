@@ -100,6 +100,7 @@ void solve_celular_model (struct ode_solver *solver, struct user_options *option
     // ====== Begin configuation =============
     init_ode_solver_with_cell_model (solver);
     struct stim_config_hash *stimuli_configs = options->stim_configs;
+    struct string_hash *ode_extra_data = options->ode_extra_config;
 
     double last_stimulus_time = -1.0;
 
@@ -120,6 +121,13 @@ void solve_celular_model (struct ode_solver *solver, struct user_options *option
             }
         }
     }
+
+    void *extra_data = NULL;
+    if (ode_extra_data)
+    {
+        extra_data = init_extra_data_function(ode_extra_data);
+    }
+
     // ====== End configuation =============
     
     int count = 0;
@@ -181,7 +189,7 @@ void solve_celular_model (struct ode_solver *solver, struct user_options *option
 
         start_stop_watch (&ode_time);
 
-        solve_odes (solver, cur_time, ode_step, stimuli_configs);
+        solve_odes (solver, cur_time, ode_step, stimuli_configs, extra_data);
 
         ode_total_time += stop_stop_watch (&ode_time);
 
@@ -272,7 +280,7 @@ void set_ode_initial_conditions (struct ode_solver *solver)
 
 }
 
-void solve_odes (struct ode_solver *solver, double cur_time, int ode_step, struct stim_config_hash *stim_configs)
+void solve_odes (struct ode_solver *solver, double cur_time, int ode_step, struct stim_config_hash *stim_configs, void *extra_data)
 {
     assert(solver->sv);
 
@@ -353,7 +361,7 @@ void solve_odes (struct ode_solver *solver, double cur_time, int ode_step, struc
 
     // Get the reference to the solver function
     solve_model_ode_cpu_fn *solve_odes_pt = solver->solve_model_ode_cpu;
-    solve_odes_pt(dt, sv, merged_stims, ode_step);
+    solve_odes_pt(dt, sv, merged_stims, ode_step, extra_data);
 
 }
 
@@ -446,11 +454,57 @@ void print_state_variables (const struct ode_solver *solver, const char filename
     real *sv = solver->sv;
     
     fprintf(file,"Time = %g\n",cur_time);
-    for (int i = 0; i < nodes-1; i++)
+    for (int i = 0; i < nodes; i++)
     {
-        fprintf(file,"%g ", sv[i]);
+        fprintf(file,"sv[%d] = %g\n", i, sv[i]);
     }
-    fprintf(file,"%g\n", sv[nodes-1]);
 
     print_to_stdout_and_file("State variables saved! Iteration = %d -- Time = %g\n",count,cur_time);
+}
+
+void* init_extra_data_function (struct string_hash *ode_extra_data)
+{
+    char *ret = NULL;
+    int num_par = 6;
+
+    real *extra_data = (real*)malloc(sizeof(real)*num_par);
+
+    real atpi = 6.8;   
+    ret = string_hash_search(ode_extra_data,"atpi");
+    if (ret)
+        atpi = (real)strtod(ret,NULL);
+
+    real Ko = 5.4;   
+    ret = string_hash_search(ode_extra_data,"Ko");
+    if (ret)
+        Ko = (real)strtod(ret,NULL);
+
+    real Ki = 138.3;   
+    ret = string_hash_search(ode_extra_data,"Ki");
+    if (ret)
+        Ki = (real)strtod(ret,NULL);
+
+    real GNa_multiplicator = 1.0;   
+    ret = string_hash_search(ode_extra_data,"GNa_multiplicator");
+    if (ret)
+        GNa_multiplicator = (real)strtod(ret,NULL);
+
+    real GCa_multiplicator = 1.0;   
+    ret = string_hash_search(ode_extra_data,"GCa_multiplicator");
+    if (ret)
+        GCa_multiplicator = (real)strtod(ret,NULL);
+
+    real Vm_modifier = 0.0;   
+    ret = string_hash_search(ode_extra_data,"Vm_modifier");
+    if (ret)
+        Vm_modifier = (real)strtod(ret,NULL);
+
+    extra_data[0] = atpi;
+    extra_data[1] = Ko;
+    extra_data[2] = Ki;
+    extra_data[3] = Vm_modifier;
+    extra_data[4] = GNa_multiplicator;
+    extra_data[5] = GCa_multiplicator;
+
+    return (void*)extra_data;
 }

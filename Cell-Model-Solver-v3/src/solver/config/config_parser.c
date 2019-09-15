@@ -494,7 +494,26 @@ int parse_config_file (void *user, const char *section, const char *name, const 
             }
         }
     }
-    else {
+    else if(MATCH_SECTION(EXTRA_DATA_SECTION)) 
+    {
+
+        if(pconfig->ode_extra_config == NULL) 
+        {
+            pconfig->ode_extra_config = string_hash_create();
+        }
+
+        if(MATCH_NAME("name")) 
+        {
+            fprintf(stderr, "name is a reserved word and should not be used inside a stimulus config section. Found in %s. Exiting!\n", section);
+            exit(EXIT_FAILURE);
+        }
+        else 
+        {
+            string_hash_insert(pconfig->ode_extra_config, name, value);
+        }
+    } 
+    else 
+    {
         fprintf(stderr, "Invalid name %s in section %s on the config file!\n", name, section);
         return 0;
     }

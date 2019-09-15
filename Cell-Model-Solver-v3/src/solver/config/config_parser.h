@@ -97,6 +97,8 @@ struct user_options
     char *config_file;              /*-c option*/
 
     struct stim_config_hash *stim_configs;
+    struct string_hash *ode_extra_config;
+    //struct extra_data *extra_data_config;
 
 };
 

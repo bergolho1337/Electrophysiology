@@ -50,8 +50,10 @@ void configure_ode_solver_from_options (struct ode_solver *solver, struct user_o
 void init_ode_solver_with_cell_model (struct ode_solver* solver);
 void set_ode_initial_conditions (struct ode_solver *solver);
 
+void* init_extra_data_function (struct string_hash *ode_extra_data);
+
 void solve_celular_model (struct ode_solver *solver, struct user_options *options);
-void solve_odes (struct ode_solver *solver, double cur_time, int ode_step, struct stim_config_hash *stim_configs);
+void solve_odes (struct ode_solver *solver, double cur_time, int ode_step, struct stim_config_hash *stim_configs, void *extra_data);
 void print_solver_info (struct ode_solver *solver, struct user_options *options);
 
 void print_result(const struct ode_solver *solver, const struct user_options *configs, int count, double cur_time, bool save_in_binary, FILE *output_file);

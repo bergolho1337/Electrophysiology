@@ -8,6 +8,7 @@
 #define ODE_SECTION "ode_solver"
 #define MAIN_SECTION "main"
 #define STIM_SECTION "stim"
+#define EXTRA_DATA_SECTION "extra_data"
 
 #define MATCH_SECTION_AND_NAME(s, n) strcmp(section, s) == 0 && strcmp(name, n) == 0
 #define MATCH_SECTION(s) strcmp(section, s) == 0
