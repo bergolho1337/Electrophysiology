@@ -453,11 +453,19 @@ void print_state_variables (const struct ode_solver *solver, const char filename
     int nodes = solver->model_data.number_of_ode_equations;
     real *sv = solver->sv;
     
-    fprintf(file,"Time = %g\n",cur_time);
+    fprintf(file,"Time = %g ms\n",cur_time);
+    fprintf(file,"%s\n",PRINT_LINE);
     for (int i = 0; i < nodes; i++)
     {
-        fprintf(file,"sv[%d] = %g\n", i, sv[i]);
+        fprintf(file,"sv[%d] = %g;\n", i, sv[i]);
     }
+    fprintf(file,"%s\n",PRINT_LINE);
+    fprintf(file,"%s\n",PRINT_LINE);
+    for (int i = 0; i < nodes; i++)
+    {
+        fprintf(file,"*((real *) ((char *) sv + pitch * %d) + threadID) = %g;\n", i, sv[i]);
+    }
+    fprintf(file,"%s\n",PRINT_LINE);
 
     print_to_stdout_and_file("State variables saved! Iteration = %d -- Time = %g\n",count,cur_time);
 }
