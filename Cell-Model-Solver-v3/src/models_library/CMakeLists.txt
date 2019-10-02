@@ -63,3 +63,11 @@ set(COMMON_HEADERS model_common.h ten_tusscher_endo_2004.h)
 ADD_LIBRARY(ten_tusscher_endo_2004 ${LIB_TYPE} ${COMMON_HEADERS} ${MODEL_FILE_CPU})
 
 #########################################################
+
+############## TEN TUSSCHER FIG 4b 2004 ##############################
+set(MODEL_FILE_CPU "ten_tusscher_3_Fig4b.c")
+set(COMMON_HEADERS model_common.h ten_tusscher_3_Fig4b.h)
+
+ADD_LIBRARY(ten_tusscher_3_Fig4b ${LIB_TYPE} ${COMMON_HEADERS} ${MODEL_FILE_CPU})
+
+#########################################################

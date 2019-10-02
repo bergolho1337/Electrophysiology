@@ -104,8 +104,8 @@ void RHS_cpu(const real *sv, real *rDY_, real stim_current, real dt, real *extra
     const real sf  =sv[7];
     const real sf2  =sv[8];
     const real D_INF  =sv[9];
-    const real Xr2_INF  =sv[10];
-    const real R_INF  =sv[11];
+    const real R_INF  =sv[10];
+    const real Xr2_INF  =sv[11];
 
     const real natp = 0.24;          // K dependence of ATP-sensitive K current
     const real nicholsarea = 0.00005; // Nichol's areas (cm^2)

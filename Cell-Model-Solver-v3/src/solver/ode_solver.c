@@ -473,7 +473,7 @@ void print_state_variables (const struct ode_solver *solver, const char filename
 void* init_extra_data_function (struct string_hash *ode_extra_data)
 {
     char *ret = NULL;
-    int num_par = 6;
+    int num_par = 8;
 
     real *extra_data = (real*)malloc(sizeof(real)*num_par);
 
@@ -507,12 +507,25 @@ void* init_extra_data_function (struct string_hash *ode_extra_data)
     if (ret)
         Vm_modifier = (real)strtod(ret,NULL);
 
+    // Fibrotic cell percentage = 1.0 -> Healthy cell || Fibrotic cell percentage = 0.0 -> Fibrotic cell
+    real fibrotic_cell_percentage = 1.0;
+    ret = string_hash_search(ode_extra_data,"fibrotic_cell_percentage");
+    if (ret)
+        fibrotic_cell_percentage = (real)strtod(ret,NULL);
+    
+    real inaca_percentage = 1.0;
+    ret = string_hash_search(ode_extra_data,"inaca_percentage");
+    if (ret)
+        inaca_percentage = (real)strtod(ret,NULL);
+
     extra_data[0] = atpi;
     extra_data[1] = Ko;
     extra_data[2] = Ki;
     extra_data[3] = Vm_modifier;
     extra_data[4] = GNa_multiplicator;
     extra_data[5] = GCa_multiplicator;
+    extra_data[6] = fibrotic_cell_percentage;
+    extra_data[7] = inaca_percentage;
 
     return (void*)extra_data;
 }
