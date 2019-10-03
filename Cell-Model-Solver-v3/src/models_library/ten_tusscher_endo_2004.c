@@ -77,8 +77,6 @@ void solve_model_ode_cpu(real dt, real *sv, real stim_current, real *extra_param
 
 void RHS_cpu(const real *sv, real *rDY_, real stim_current, real dt, real *extra_parameters)
 {
-    //fibrosis = 0 means that the cell is fibrotic, 1 is not fibrotic. Anything between 0 and 1 means border zone
-    real fibrosis = 1.0;
 
     const real svolt = sv[0];
 
@@ -88,6 +86,7 @@ void RHS_cpu(const real *sv, real *rDY_, real stim_current, real dt, real *extra
     real Vm_modifier       = extra_parameters[3];
     real GNa_multiplicator = extra_parameters[4];
     real GCa_multiplicator = extra_parameters[5];
+    real fibrosis          = extra_parameters[6];   //fibrosis = 0 means that the cell is fibrotic, 1 is not fibrotic. Anything between 0 and 1 means border zone
 
     Vm_modifier = Vm_modifier - Vm_modifier*fibrosis;
 

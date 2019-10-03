@@ -508,10 +508,10 @@ void* init_extra_data_function (struct string_hash *ode_extra_data)
         Vm_modifier = (real)strtod(ret,NULL);
 
     // Fibrotic cell percentage = 1.0 -> Healthy cell || Fibrotic cell percentage = 0.0 -> Fibrotic cell
-    real fibrotic_cell_percentage = 1.0;
-    ret = string_hash_search(ode_extra_data,"fibrotic_cell_percentage");
+    real healthy_cell_percentage = 1.0;
+    ret = string_hash_search(ode_extra_data,"healthy_cell_percentage");
     if (ret)
-        fibrotic_cell_percentage = (real)strtod(ret,NULL);
+        healthy_cell_percentage = (real)strtod(ret,NULL);
     
     real inaca_percentage = 1.0;
     ret = string_hash_search(ode_extra_data,"inaca_percentage");
@@ -524,7 +524,7 @@ void* init_extra_data_function (struct string_hash *ode_extra_data)
     extra_data[3] = Vm_modifier;
     extra_data[4] = GNa_multiplicator;
     extra_data[5] = GCa_multiplicator;
-    extra_data[6] = fibrotic_cell_percentage;
+    extra_data[6] = healthy_cell_percentage;
     extra_data[7] = inaca_percentage;
 
     return (void*)extra_data;
