@@ -14,6 +14,7 @@ void compute_initial_conditions (double *sv, const int Ncell, const int Nodes)
 		sv[i*Nodes+1] = 0.01;     	// m
 		sv[i*Nodes+2] = 0.8;     	// h       
 		sv[i*Nodes+3] = 0.01;     	// n
+		
 	}
 }
 
@@ -37,11 +38,11 @@ void read_initial_conditions_from_file (double *sv, const int Ncell, const int N
 double dvdt (const double V, const double m, const double h, const double n, const double stim_current)
 {
 	// Parameters
-	static const double g_Na_max = 4.0e+02;
-	static const double E_Na = 4.0e+01;
-	static const double g_L = 7.5e-02;
-	static const double E_L = -6.0e+01;
-	static const double CM = 1.2e+01;
+	static const double g_Na_max = 400.0;
+	static const double E_Na = 40.0;
+	static const double g_L = 0.075;
+	static const double E_L = -60.0;
+	static const double CM = 12.0;
 
 	double gna = ((pow(m,3.0e+00)*h*g_Na_max));
 	double ina = (gna+1.4e-01)*(V-E_Na);		// Original
@@ -52,7 +53,7 @@ double dvdt (const double V, const double m, const double h, const double n, con
 	double ileak = ((g_L*(V-E_L)));
 	double istim = stim_current;
 
-	return ((-(ina+ik+ileak)+istim)/CM);
+	return (- (ina+ik+ileak+istim)/CM);
 }
 
 double dmdt (const double V, const double m)

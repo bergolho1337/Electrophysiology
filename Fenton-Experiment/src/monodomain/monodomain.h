@@ -9,8 +9,8 @@
 #include <cmath>
 #include <omp.h>
              
-#include <Eigen/Sparse>
-#include <Eigen/SparseLU>
+//#include <Eigen/Sparse>
+//#include <Eigen/SparseLU>
 
 #include "../celular_model/celular_model.h"
 #include "../config/config.h"
@@ -62,9 +62,9 @@ void update_state_vector (double *sv, const double *vm,\
 			  const int np, const int nodes);
 void solve_reaction (double *sv, double *stims, const double t,\
 		     const int np, const int nodes, const double dt);
-void assembly_matrix (Eigen::SparseMatrix<double> &A, const double h, const double dt,\
+//void assembly_matrix (Eigen::SparseMatrix<double> &A, const double h, const double dt,\
 					const int ncell);
-void assembly_load_vector (Eigen::VectorXd &b, const double *sv,
+//void assembly_load_vector (Eigen::VectorXd &b, const double *sv,\
 						const double h, const double dt, const int ncell, const int nodes);
 
 void configure_solver_from_options (struct monodomain_solver *solver, struct user_options *options);

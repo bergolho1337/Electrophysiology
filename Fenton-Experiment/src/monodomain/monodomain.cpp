@@ -2,7 +2,12 @@
 
 static inline double ALPHA (double dt, double h, double D) 
 {
-    return ( D * dt) / ( pow(h,2.0) );
+    return ( D * dt) / ( pow(h,2.0) * UM2_TO_CM2 );
+}
+
+static inline double CFL (double dt, double h, double D) 
+{
+    return ( D * dt / pow(h,2.0) );
 }
 
 struct monodomain_solver* new_monodomain_solver ()
@@ -64,8 +69,19 @@ void solve_monodomain (struct monodomain_solver *solver,\
 	int Ncell = solver->Ncell;
 	int Niter = solver->Niter;
 
-	static const double D = 2.5e-04;
+	static const double D = 5.0e-03;
+	//static const double D = 4.0e-04;
 	double alpha = ALPHA(D,dx,dt);
+	double cfl = CFL(D,dx,dt);
+	if (cfl >= 0.5)
+	{
+		fprintf(stderr,"[Monodomain] ERROR! The CFL condition is not attended!\n");
+		exit(EXIT_FAILURE);
+	}
+	else
+	{
+		printf("[Monodomain] CFL = %g\n",cfl);
+	}
 
 	int print_rate = plotter->print_rate;
 	int sst_rate = plotter->sst_rate;

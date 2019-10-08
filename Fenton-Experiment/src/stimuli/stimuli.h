@@ -9,6 +9,11 @@
 #include "../config/config.h"
 #include "../utils/utils.h"
 
+const double STIM_X_MIN = 0.0;
+const double STIM_X_MAX = 2000.0;
+const double ELECTRODE_X_POSITION = 2500.0;
+const double STIM_CURRENT = -200.0;
+
 struct stim_config
 {
 	double stim_start;

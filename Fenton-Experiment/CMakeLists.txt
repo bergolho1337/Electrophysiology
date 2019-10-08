@@ -21,7 +21,7 @@ IF (OPENMP_FOUND)
     #message("${CMAKE_CXX_FLAGS}")
 ENDIF(OPENMP_FOUND)
 
-FIND_PACKAGE(Eigen3 3.3 REQUIRED NO_MODULE)
+#FIND_PACKAGE(Eigen3 3.3 REQUIRED NO_MODULE)
 
 ADD_SUBDIRECTORY(src/monodomain)
 ADD_SUBDIRECTORY(src/celular_model)
@@ -34,5 +34,6 @@ ADD_EXECUTABLE(FentonExperiment src/main.cpp)
 
 ADD_DEPENDENCIES(FentonExperiment monodomain config plot stimuli cell_model utils)
 
-TARGET_LINK_LIBRARIES(FentonExperiment monodomain config plot stimuli cell_model utils dl m Eigen3::Eigen)
+#TARGET_LINK_LIBRARIES(FentonExperiment monodomain config plot stimuli cell_model utils dl m Eigen3::Eigen)
+TARGET_LINK_LIBRARIES(FentonExperiment monodomain config plot stimuli cell_model utils dl m)
 

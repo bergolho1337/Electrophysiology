@@ -26,23 +26,21 @@ void configure_stimulus_from_options (struct stim_config *stim, struct user_opti
 
 double get_spatial_stim_currents (const double x)
 {
-	static const double xmin = 0.0;
-	static const double xmax = 0.2;
+	//static const double xmin = 0.0;
+	//static const double xmax = 2000.0;
 
-	static const double stim_current = 200.0;
+	//static const double stim_current = 200.0;
 
 	// Old stimulus code ...
-	/*
-	if (x >= xmin && x <= xmax)
-		return stim_current;
+	if (x >= STIM_X_MIN && x <= STIM_X_MAX)
+		return STIM_CURRENT;
 	else
 		return 0.0;
-	*/
 
 	// New stimulus code using a Gaussian as from the paper
-	static const double xp = 0.25;		// Position of the electrode
+	//static const double xp = 0.25;		// Position of the electrode
 
-	return stim_current*gaussian(x-xp);
+	//return STIM_CURRENT*gaussian(x-ELECTRODE_X_POSITION);
 }
 
 void compute_stimulus (struct stim_config *stim, double *stims, const double cur_time, const int np, const double dx)

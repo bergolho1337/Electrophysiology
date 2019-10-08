@@ -151,9 +151,9 @@ def main():
         sys.exit(1)
     else:
 
-        #cell_ids = [0,100,200,300,400]		# 5cm
+        cell_ids = [0,100,200,300,400]		# 5cm
 	#cell_ids = [0,80,160,240,320]		# 4cm
-	cell_ids = [0,60,120,180,240]		# 3cm
+	#cell_ids = [0,60,120,180,240]		# 3cm
 	
 
         for cell_id in cell_ids:
