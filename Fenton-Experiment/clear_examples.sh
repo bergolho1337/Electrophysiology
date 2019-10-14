@@ -1,3 +1,3 @@
 #!/bin/bash
 
-cd examples; rm sst_cable*; rm simple_cable*; cd ..
+cd examples; rm sst-cable*; rm simple_cable*; rm cable*; cd ..

@@ -43,6 +43,8 @@
 
 #include "monodomain/monodomain.h"
 
+#define NUM_THREADS 8
+
 using namespace std;
 
 int main (int argc, char *argv[])
@@ -76,7 +78,7 @@ int main (int argc, char *argv[])
 
 	// OpenMP configuration
 	omp_set_dynamic(0);
-    omp_set_num_threads(4);
+    omp_set_num_threads(NUM_THREADS);
 
 	print_configuration_parameters(solver->dx,solver->dt,solver->tmax,solver->lmax,\
 					solver->Ncell,solver->Niter,Nodes,\

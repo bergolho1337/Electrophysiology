@@ -1,0 +1,7 @@
+.vscode
+build/
+bin/
+vtk/
+output/
+references/
+steady_state/

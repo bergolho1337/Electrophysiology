@@ -10,13 +10,19 @@
 
 struct user_options
 {
+	// Main configuration
+	int num_threads;
+
 	// Finite difference configuration section
-	double dx;
+	double dx;	
 	double cell_length;
 	int num_cell_div;
 	double dt;
 	double tmax;
 	double lmax;
+	double sigma_c;
+	double G_gap;
+	double diameter;
 
 	// Plot configuration section
 	std::ofstream plot_files[5];
@@ -24,6 +30,7 @@ struct user_options
 	int print_rate;
 	int sst_rate;
 	bool use_steady_state;
+	bool calc_activation_time;
 
 	// Stimulus configuration section
 	double stim_start;

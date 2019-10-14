@@ -81,7 +81,7 @@ int main (int argc, char *argv[])
 
 	// OpenMP configuration
 	omp_set_dynamic(0);
-    omp_set_num_threads(2);
+    omp_set_num_threads(solver->num_threads);
 
 	print_configuration_parameters(solver->dx,solver->dt,solver->tmax,solver->lmax,\
 					solver->Ncell,solver->Niter,Nodes,\
