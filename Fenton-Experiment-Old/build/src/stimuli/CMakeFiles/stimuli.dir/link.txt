@@ -1,0 +1,2 @@
+/usr/bin/ar qc libstimuli.a  CMakeFiles/stimuli.dir/stimuli.cpp.o
+/usr/bin/ranlib libstimuli.a

@@ -1,0 +1,2 @@
+/usr/bin/ar qc libmonodomain.a  CMakeFiles/monodomain.dir/monodomain.cpp.o
+/usr/bin/ranlib libmonodomain.a

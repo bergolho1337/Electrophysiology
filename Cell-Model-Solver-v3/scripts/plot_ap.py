@@ -15,7 +15,7 @@ def write_solution (direction):
     plt.xlabel(u"t (ms)",fontsize=15)
     plt.ylabel(u"V (mV)",fontsize=15)
     #plt.xlim([11300,12000])
-    plt.xlim([-10,1300])
+    #plt.xlim([-10,1300])
     #plt.xlim([20000,30000])
     #plt.xlim([30000,40000])
     #plt.ylim([-90,40])

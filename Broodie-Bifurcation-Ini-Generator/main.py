@@ -8,7 +8,7 @@ import numpy as np
 
 NUM_THREADS = 4
 DT_PDE = 0.02
-SIMULATION_TIME = 200.0
+SIMULATION_TIME = 500.0
 
 UPDATE_LIBRARY_PATH = "shared_libs/libdefault_update_monodomain.so"
 

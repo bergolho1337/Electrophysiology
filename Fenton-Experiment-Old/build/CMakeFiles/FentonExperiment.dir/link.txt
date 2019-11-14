@@ -1,0 +1,1 @@
+/usr/bin/c++   -O2 -fno-strict-aliasing -Wall -Wno-unused-function -Wno-int-in-bool-context -fopenmp    -rdynamic CMakeFiles/FentonExperiment.dir/src/main.cpp.o  -o ../bin/FentonExperiment src/monodomain/libmonodomain.a src/config/libconfig.a src/plot/libplot.a src/stimuli/libstimuli.a src/celular_model/libcell_model.a src/utils/libutils.a -ldl -lm 
