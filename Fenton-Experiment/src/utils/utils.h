@@ -19,8 +19,6 @@ void write_plot_data (std::ofstream files[], const double t, const double *sv,\
 			const int Ncell, const int Nodes,\
 			const int ids[]);
 void write_steady_state_to_file (const double *sv, const int Ncell, const int Nodes);
-void write_activation_times (const double *at, const double *max_dvdt, const int ncell);
-void write_propagation_velocity (const double *velocity, const int *ids);
 
 void print_stimulus (const double *stim_current, const int Ncell, const double dx);
 void print_state_vector (const double *sv, const int Ncell, const int Nodes);

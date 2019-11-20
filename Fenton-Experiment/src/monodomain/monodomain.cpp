@@ -1,15 +1,8 @@
 #include "monodomain.h"
 
-static inline double ALPHA (const double beta, const double cm, const double d, const double dx, const double dt) 
+static inline double ALPHA (double dt, double h, double D) 
 {
-    return ((( M_PI * (beta) * (cm) * (d) * (d) * (dx) ) / ( (dt) * (4.0) ) ) * UM2_TO_CM2);		// Cylinder control volume
-	//return ((( (beta) * (cm) * (dx) * (dx) * (dx) ) / ( (dt) ) ) * UM2_TO_CM2);						// Cubic control volume	
-}
-
-static inline double GAMMA (const double d, const double sigma_c, const double dx) 
-{
-    return (M_PI * d * d * sigma_c) / (4.0 * dx);													// Cylinder control volume
-	//return ( (sigma_c) * (dx) * (dx) ) / (dx);														// Cubic control volume
+    return ( D * dt) / ( pow(h,2.0) );
 }
 
 struct monodomain_solver* new_monodomain_solver ()
@@ -20,8 +13,6 @@ struct monodomain_solver* new_monodomain_solver ()
 	solver->stim_current = NULL;
 	solver->vm = NULL;
 	solver->cell_mask = NULL;
-	solver->activation_time = NULL;
-	solver->max_dvdt = NULL;
 
 	return solver; 
 }
@@ -34,112 +25,89 @@ void free_monodomain_solver (struct monodomain_solver *solver)
 	if (solver->stim_current)
 		delete [] solver->stim_current;
 
-	if (solver->vm)
-		delete [] solver->vm;
-
 	if (solver->cell_mask)
 		delete [] solver->cell_mask;
-	
-	if (solver->max_dvdt)
-		delete [] solver->max_dvdt;
 
-	if (solver->activation_time)
-		delete [] solver->activation_time;
+	if (solver->vm)
+		delete [] solver->vm;
 
 	free(solver);
 }
 
 void configure_solver_from_options (struct monodomain_solver *solver, struct user_options *options)
 {
-	solver->num_threads = options->num_threads;
 	solver->dx = options->dx;
 	solver->dt = options->dt;
 	solver->tmax = options->tmax;
 	solver->lmax = options->lmax;
-	solver->diameter = options->diameter;
-	solver->num_cell_div = options->num_cell_div;
 	solver->Ncell = nearbyint(solver->lmax / solver->dx);
 	solver->Niter = nearbyint(solver->tmax / solver->dt);
 
-	solver->sigma_c = options->sigma_c;
-	solver->G_gap = options->G_gap;
-
 	solver->use_steady_state = options->use_steady_state;
 	solver->sst_filename = options->sst_filename;
-	solver->calc_activation_time = options->calc_activation_time;
 
 	// Allocate memory
 	solver->sv = new double[solver->Ncell*Nodes]();
 	solver->stim_current = new double[solver->Ncell]();
 	solver->vm = new double[solver->Ncell]();
-	solver->cell_mask = new bool[solver->Ncell];
-	if (solver->calc_activation_time)
-	{
-		solver->activation_time = new double[solver->Ncell];
-		solver->max_dvdt = new double[solver->Ncell];
+	solver->cell_mask = new bool[solver->Ncell]();
 
-		configure_activation_time(solver->activation_time,solver->max_dvdt,solver->Ncell);
-	}
-
-	configure_cell_mask(solver->cell_mask,solver->Ncell,solver->num_cell_div);
+	configure_cell_mask(solver);
 
 	// DEBUG
 	//print_monodomain_solver(solver);
 }
 
-void configure_cell_mask (bool cell_mask[], const int ncell, const int num_cell_div)
+void configure_cell_mask (struct monodomain_solver *solver)
 {
-	// Homogenous model (without Ggap)
-	if (num_cell_div == 0)
-		memset(cell_mask,false,ncell);
-	// Heterogenous model (with Ggap)
-	else
+	int Ncell = solver->Ncell;
+	double dx = solver->dx;
+	int num_cell_divisions = nearbyint(CELL_LENGTH / dx);
+
+	if (num_cell_divisions == 1)
 	{
-		for (int i = 0; i < ncell; i++)
+		memset(solver->cell_mask,false,sizeof(bool)*Ncell);
+	}
+	else if (num_cell_divisions > 1)
+	{
+		for (int i = 0; i < Ncell; i++)
 		{
-			if (i % num_cell_div == 0 && i != 0)
-				cell_mask[i] = true;
+			if (i % num_cell_divisions == 0 && i != 0)
+				solver->cell_mask[i] = true;
 			else
-				cell_mask[i] = false;
+				solver->cell_mask[i] = false;
 		}
 	}
+	else
+	{
+		fprintf(stderr,"[-] ERROR! Invalid number for cell divisions! 'num_cell_divisions' = %d\n",num_cell_divisions);
+		exit(EXIT_FAILURE);
+	}
 
-}
-
-void configure_activation_time(double *activation_time, double *max_dvdt, const int ncell)
-{
-	memset(activation_time,-1.0,sizeof(double)*ncell);
-	memset(max_dvdt,__DBL_MIN__,sizeof(double)*ncell);
+	for (int i = 0; i < Ncell; i++)
+		printf("%d\n",solver->cell_mask[i]);
+	exit(1);
 }
 
 void solve_monodomain (struct monodomain_solver *solver,\
 			struct stim_config *stim,\
 			struct plot_config *plotter)
 {
-	// Constants
-	const double Cm = 1.0;
-	const double beta = 0.14;
-
 	// Get the reference to the structures variables 
 	double *sv = solver->sv;
 	double *stim_current = solver->stim_current;
 	double *vm = solver->vm;
-	bool *mask = solver->cell_mask;
-	double *at = solver->activation_time;
-	double *max_dvdt = solver->max_dvdt;
 	double dx = solver->dx;
-	double diameter = solver->diameter;
 	double dt = solver->dt;
-	bool calc_activation_time = solver->calc_activation_time;
-	
 	int Ncell = solver->Ncell;
 	int Niter = solver->Niter;
 
-	double sigma_c = solver->sigma_c;
-	double G_gap = solver->G_gap;
-
-	double alpha = ALPHA(beta,Cm,diameter,dx,dt);
-	double gamma = GAMMA(diameter,sigma_c,dx);
+	//static const double D = 2.5e-04;
+	static const double sigma = 0.000035;
+	static const double beta = 0.14;
+	static const double cm = 1.0;
+	double D = sigma / (beta*cm);
+	double alpha = ALPHA(D,dx,dt);
 
 	int print_rate = plotter->print_rate;
 	int sst_rate = plotter->sst_rate;
@@ -183,22 +151,12 @@ void solve_monodomain (struct monodomain_solver *solver,\
 		compute_stimulus(stim,stim_current,t,Ncell,dx);
 		//print_stimulus(stim_current,Ncell,dx);
 		
-		solve_diffusion(sv,vm,mask,alpha,gamma,G_gap,Ncell,Nodes);
+		solve_diffusion(sv,vm,beta,cm,sigma,dx,dt,Ncell,Nodes);
 
 		update_state_vector(sv,vm,Ncell,Nodes);		
 		
 		solve_reaction(sv,stim_current,t,Ncell,Nodes,dt);
 
-		if (calc_activation_time)
-			calculate_derivative(at,max_dvdt,sv,vm,Ncell,Nodes,dt,t);
-
-
-	}
-
-	if (calc_activation_time)
-	{
-		calculate_propagation_velocity(at,plot_cell_ids,dx,Ncell);
-		write_activation_times(at,max_dvdt,Ncell);
 	}
 
 	GET_TIME(finish);
@@ -208,89 +166,37 @@ void solve_monodomain (struct monodomain_solver *solver,\
 	printf("%s\n",PRINT_LINE);
 }
 
-
-
-void solve_diffusion (const double *sv, double *vm, const bool *mask, const double alpha, const double gamma, const double G_gap, const int ncell, const int nodes)
+void solve_diffusion (const double *sv, double *vm, const double beta, const double cm, const double sigma, const double dx, const double dt, const int ncell, const int nodes)
 {
 
-	// Explicit:
+	// Explicit: Finite Volume Method
 	#pragma omp parallel for
 	for (int i = 0; i < ncell; i++)
 	{
-		double west_flux, east_flux;
+		double total_flux = 0.0;
+		double west_flux = 0.0;
+		double east_flux = 0.0;
 
 		// Case 1: First volume
 		if (i == 0)
-		{
-			double multiplier = calculate_flux(mask[i+1],gamma,G_gap);
-			east_flux = (-multiplier) * (sv[nodes*(i+1)] - sv[nodes*i]);
-			west_flux = 0.0;
-		}
+			east_flux = -sigma * ( (sv[nodes*(i+1)] - sv[nodes*i]) / dx ) * dx * dx;
 		// Case 2: Last volume
 		else if (i == ncell-1)
-		{
-			double multiplier = calculate_flux(mask[i-1],gamma,G_gap);
-			east_flux = 0.0;
-			west_flux = (-multiplier) * (sv[nodes*(i)] - sv[nodes*(i-1)]);
-		}
+			west_flux = -sigma * ( (sv[nodes*i] - sv[nodes*(i-1)]) / dx ) * dx * dx;
 		// Case 3: Middle volume
 		else
 		{
-			double multiplier_east = calculate_flux(mask[i+1],gamma,G_gap);
-			double multiplier_west = calculate_flux(mask[i-1],gamma,G_gap);
-			east_flux = (-multiplier_east) * (sv[nodes*(i+1)] - sv[nodes*i]);
-			west_flux = (-multiplier_west) * (sv[nodes*(i)] - sv[nodes*(i-1)]);
+			east_flux = -sigma * ( (sv[nodes*(i+1)] - sv[nodes*i]) / dx ) * dx * dx;
+			west_flux = -sigma * ( (sv[nodes*i] - sv[nodes*(i-1)]) / dx ) * dx * dx;
 		}
-		
-		vm[i] = sv[nodes*i] + ( (west_flux - east_flux) / alpha );
-		
+
+		total_flux = east_flux - west_flux;
+
+		vm[i] = sv[nodes*i] + ( (-total_flux / (beta*cm*dx*dx*dx) * dt) );
 	}	
 
 	// Implicit: Solve the linear system
 	//x = sparseSolver.solve(b);
-}
-
-double calculate_flux (const bool type, const double gamma, const double G_gap)
-{
-	if (type == true)
-		return G_gap;
-	else
-		return gamma;
-}
-
-void calculate_derivative (double *at, double *max_dvdt, double *sv, double *vms, const int ncell, const int nodes, const double dt, const double cur_time)
-{
-	//#pragma omp parallel for
-	for (int i = 0; i < ncell; i++)
-	{
-		double v_new = sv[i*nodes];
-		double v_old = vms[i];
-		double dvdt = (v_new - v_old) / dt;
-
-		if (dvdt > max_dvdt[i])
-		{
-			max_dvdt[i] = dvdt;
-			at[i] = cur_time;
-		}
-	}
-
-}
-
-void calculate_propagation_velocity (const double *at, const int *plot_ids, const double dx, const int ncell)
-{
-	const int offset = 5;
-	double plot_velocity[5];
-
-	for (int i = 0; i < 5; i++)
-	{
-		int cell_index = plot_ids[i];
-
-		double velocity = (offset*dx) / (at[cell_index+offset] - at[cell_index]);
-
-		plot_velocity[i] = velocity * UM_PER_MS_TO_M_PER_S;
-	}
-
-	write_propagation_velocity(plot_velocity,plot_ids);
 }
 
 void update_state_vector (double *sv, const double *vm,\
@@ -317,11 +223,17 @@ void solve_reaction (double *sv, double *stims, const double t,\
 		double h_old = sv[i*nodes+2];
 		double n_old = sv[i*nodes+3];
 
-		sv[i*nodes] = V_old + dt*dvdt(V_old,m_old,h_old,n_old,stims[i]);
-		sv[i*nodes+1] = m_old + dt*dmdt(V_old,m_old);
-		sv[i*nodes+2] = h_old + dt*dhdt(V_old,h_old);
-		sv[i*nodes+3] = n_old + dt*dndt(V_old,n_old);
+		// Explicit Euler
+		//sv[i*nodes] = V_old + dt*dvdt(V_old,m_old,h_old,n_old,stims[i]);
+		//sv[i*nodes+1] = m_old + dt*dmdt(V_old,m_old);
+		//sv[i*nodes+2] = h_old + dt*dhdt(V_old,h_old);
+		//sv[i*nodes+3] = n_old + dt*dndt(V_old,n_old);
 		
+		// Rush-Larsen
+		sv[i*nodes] = V_old + dt*dvdt(V_old,m_old,h_old,n_old,stims[i]);
+		sv[i*nodes+1] = dmdt_RL(V_old,m_old,dt);
+		sv[i*nodes+2] = dhdt_RL(V_old,h_old,dt);
+		sv[i*nodes+3] = dndt_RL(V_old,n_old,dt);
 	}
 	
 }
@@ -402,17 +314,11 @@ void assembly_load_vector (Eigen::VectorXd &b, const double *sv,
 void print_monodomain_solver (const struct monodomain_solver *solver)
 {
 
-	printf("[Monodomain] num_threads = %d\n",solver->num_threads);
 	printf("[Monodomain] dx = %.10lf cm\n",solver->dx);
 	printf("[Monodomain] dt = %.10lf ms\n",solver->dt);
 	printf("[Monodomain] tmax = %.10lf ms\n",solver->tmax);
 	printf("[Monodomain] lmax = %.10lf cm\n",solver->lmax);
-	printf("[Monodomain] sigma_c = %.10lf mS/cm\n",solver->sigma_c);
-	printf("[Monodomain] G_gap = %.10lf uS\n",solver->G_gap);
 	printf("[Monodomain] Number of cells = %d\n",solver->Ncell);
-	printf("[Monodomain] Number of cell divisions = %d\n",solver->num_cell_div);
 	printf("[Monodomain] Number of iterations = %d\n",solver->Niter);
 	printf("[Monodomain] Number of ODE equations = %d\n",Nodes);
-
-	//exit(EXIT_SUCCESS);
 }

@@ -29,7 +29,7 @@ double get_spatial_stim_currents (const double x)
 	static const double xmin = 0.0;
 	static const double xmax = 0.2;
 
-	static const double stim_current = 200.0;
+	static const double stim_current = 50.0;
 
 	// Old stimulus code ...
 	/*

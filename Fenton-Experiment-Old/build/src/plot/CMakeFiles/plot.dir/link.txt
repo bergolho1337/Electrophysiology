@@ -1,2 +1,0 @@
-/usr/bin/ar qc libplot.a  CMakeFiles/plot.dir/plot.cpp.o
-/usr/bin/ranlib libplot.a

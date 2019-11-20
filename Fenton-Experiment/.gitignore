@@ -5,3 +5,7 @@ vtk/
 output/
 references/
 steady_state/
+examples/experiment-1/
+scripts/karma-results/
+scripts/lucas-results-homogenous/
+scripts/alejandro-results/

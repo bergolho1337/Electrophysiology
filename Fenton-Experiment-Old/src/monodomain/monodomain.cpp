@@ -64,6 +64,7 @@ void solve_monodomain (struct monodomain_solver *solver,\
 	int Ncell = solver->Ncell;
 	int Niter = solver->Niter;
 
+	//static const double D = 2.5e-04;
 	static const double D = 2.5e-04;
 	double alpha = ALPHA(D,dx,dt);
 

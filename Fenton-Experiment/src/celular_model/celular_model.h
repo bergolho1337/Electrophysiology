@@ -15,4 +15,8 @@ double dmdt (const double V, const double m);
 double dhdt (const double V, const double h);
 double dndt (const double V, const double n);
 
+double dmdt_RL (const double V, const double m, const double dt);
+double dhdt_RL (const double V, const double h, const double dt);
+double dndt_RL (const double V, const double n, const double dt);
+
 #endif

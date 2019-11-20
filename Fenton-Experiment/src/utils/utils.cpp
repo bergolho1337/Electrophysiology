@@ -70,28 +70,6 @@ void write_plot_data (std::ofstream files[], const double t, const double *sv,\
 	}
 }
 
-void write_activation_times (const double *at, const double *max_dvdt, const int ncell)
-{
-	FILE *file = fopen("output/activation_times.dat","w+");
-	for (int i = 0; i < ncell; i++)
-	{
-		//fprintf(file,"|| Cell %d || %g %g ||\n",i,at[i],max_dvdt[i]);
-		fprintf(file,"%d %g %g\n",i,at[i],max_dvdt[i]);
-	}
-	fclose(file);
-}
-
-void write_propagation_velocity (const double *velocity, const int *ids)
-{
-	FILE *file = fopen("output/propagation_velocity.dat","w+");
-	for (int i = 0; i < 5; i++)
-	{
-		//fprintf(file,"|| Cell %d || Propagation velocity = %.5lf m/s ||\n",ids[i],velocity[i]);
-		fprintf(file,"%d %.5lf\n",ids[i],velocity[i]);
-	}
-	fclose(file);
-}
-
 void print_stimulus (const double *stim_current, const int Ncell, const double dx)
 {
 	for (int i = 0; i < Ncell; i++)
@@ -137,7 +115,6 @@ void print_configuration_parameters(const double dx, const double dt, const doub
 		printf("%d ",plot_cell_ids[i]);
 	printf("%d\n",plot_cell_ids[i]);
 	printf("%s\n",PRINT_LINE);
-
 }
 
 

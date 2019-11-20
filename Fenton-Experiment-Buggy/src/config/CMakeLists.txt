@@ -1,0 +1,7 @@
+set(SOURCE_FILES_CONFIG config.h config.cpp)
+
+ADD_LIBRARY(config STATIC ${SOURCE_FILES_CONFIG})
+
+if(NOT MSVC)
+    set_property(TARGET config PROPERTY POSITION_INDEPENDENT_CODE ON)
+endif()
