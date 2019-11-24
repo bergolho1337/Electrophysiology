@@ -18,7 +18,7 @@ void write_VTK_to_file (const double *sv, const double dx,\
 void write_plot_data (std::ofstream files[], const double t, const double *sv,\
 			const int Ncell, const int Nodes,\
 			const int ids[]);
-void write_steady_state_to_file (const double *sv, const int Ncell, const int Nodes);
+void write_steady_state_to_file (const double *sv, const int bcl, const double lmax, const int Ncell, const int Nodes);
 
 void print_stimulus (const double *stim_current, const int Ncell, const double dx);
 void print_state_vector (const double *sv, const int Ncell, const int Nodes);

@@ -25,6 +25,7 @@
 #define UM2_TO_CM2 0.00000001f
 #define CELL_LENGTH 0.01		// {cm}
 
+
 struct monodomain_solver
 {
 	// Initial condition configuration
@@ -61,7 +62,7 @@ void solve_monodomain (struct monodomain_solver *solver,\
 			struct stim_config *stim,\
 			struct plot_config *plotter);
 
-void solve_diffusion (const double *sv, double *vm, const double beta, const double cm, const double sigma, const double dx, const double dt, const int ncell, const int nodes);
+void solve_diffusion (const double *sv, double *vm, bool *cell_mask, const double beta, const double cm, const double sigma, const double G, const double dx, const double d, const double dt, const int ncell, const int nodes);
 
 void update_state_vector (double *sv, const double *vm,\
 			  const int np, const int nodes);

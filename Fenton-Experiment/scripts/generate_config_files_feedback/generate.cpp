@@ -8,6 +8,8 @@ const int MAX_SIZE = 500;
 const double DT = 0.01;                 // {ms}
 const double N_CYCLES = 200.0;           
 const double CABLE_LENGTH = 1.0;        // {cm}
+const double DX = 0.005;                 // {cm}
+const int EXPERIMENT_NUMBER = 3;
 
 int SST_RATE = nearbyint(N_CYCLES/DT);
 
@@ -22,7 +24,7 @@ void write_sst_config_file (const int period, const int start_period, const int 
     FILE *file = fopen(filename,"w+");
 
     fprintf(file,"[main]\n");
-    fprintf(file,"dx = 0.01\n");
+    fprintf(file,"dx = %g\n",DX);
     fprintf(file,"dt = %g\n",DT);
     fprintf(file,"tmax = %g\n",tmax);
     fprintf(file,"lmax = %g\n",CABLE_LENGTH);
@@ -65,14 +67,14 @@ void write_simulation_config_file (const int period, const int start_period)
     FILE *file = fopen(filename,"w+");
 
     fprintf(file,"[main]\n");
-    fprintf(file,"dx = 0.01\n");
+    fprintf(file,"dx = %g\n",DX);
     fprintf(file,"dt = %g\n",DT);
     fprintf(file,"tmax = %g\n",tmax);
     fprintf(file,"lmax = %g\n",CABLE_LENGTH);
     fprintf(file,"print_rate = %d\n",print_rate);
     fprintf(file,"sst_rate = %d\n",sst_rate);
     fprintf(file,"use_steady_state = yes\n");
-    fprintf(file,"sst_filename = steady_state/experiment-1/cable-%g_bcl-%d.sst\n",CABLE_LENGTH,period);
+    fprintf(file,"sst_filename = steady_state/experiment-%d/cable-%g_bcl-%d.sst\n",EXPERIMENT_NUMBER,CABLE_LENGTH,period);
     fprintf(file,"\n\n");
     fprintf(file,"[stimulus]\n");
     fprintf(file,"stim_start = 0.0\n");

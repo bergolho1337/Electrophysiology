@@ -5,7 +5,9 @@ vtk/
 output/
 references/
 steady_state/
+results/
 examples/experiment-1/
 scripts/karma-results/
 scripts/lucas-results-homogenous/
+scripts/lucas-results-heterogenous-cell-length_0.02cm/
 scripts/alejandro-results/

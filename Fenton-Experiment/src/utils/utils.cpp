@@ -44,9 +44,11 @@ void write_VTK_to_file (const double *sv, const double dx,\
 	fclose(file);
 }
 
-void write_steady_state_to_file (const double *sv, const int Ncell, const int Nodes)
+void write_steady_state_to_file (const double *sv, const int bcl, const double lmax, const int Ncell, const int Nodes)
 {
-	FILE *file = fopen("output.sst","w+");
+	char filename[200];
+	sprintf(filename,"cable-%g_bcl-%d.sst",lmax,bcl);
+	FILE *file = fopen(filename,"w+");
 	for (int i = 0; i < Ncell; i++)
 	{
 		for (int j = 0; j < Nodes-1; j++)

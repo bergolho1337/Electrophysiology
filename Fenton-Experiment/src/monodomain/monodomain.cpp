@@ -84,9 +84,6 @@ void configure_cell_mask (struct monodomain_solver *solver)
 		exit(EXIT_FAILURE);
 	}
 
-	for (int i = 0; i < Ncell; i++)
-		printf("%d\n",solver->cell_mask[i]);
-	exit(1);
 }
 
 void solve_monodomain (struct monodomain_solver *solver,\
@@ -97,13 +94,17 @@ void solve_monodomain (struct monodomain_solver *solver,\
 	double *sv = solver->sv;
 	double *stim_current = solver->stim_current;
 	double *vm = solver->vm;
+	bool *cell_mask = solver->cell_mask;
 	double dx = solver->dx;
 	double dt = solver->dt;
+	double lmax = solver->lmax;
+	double bcl = stim->start_period;
 	int Ncell = solver->Ncell;
 	int Niter = solver->Niter;
 
-	//static const double D = 2.5e-04;
+	static const double d = 0.01;
 	static const double sigma = 0.000035;
+	static const double G = 0.000000628;
 	static const double beta = 0.14;
 	static const double cm = 1.0;
 	double D = sigma / (beta*cm);
@@ -143,15 +144,15 @@ void solve_monodomain (struct monodomain_solver *solver,\
 			write_plot_data(plot_files,t,sv,Ncell,Nodes,plot_cell_ids);
 		}
 
-		if (k % (sst_rate-1) == 0)
+		if (k % (sst_rate-1) == 0 && !solver->use_steady_state)
 		{
-			write_steady_state_to_file(sv,Ncell,Nodes);
+			write_steady_state_to_file(sv,bcl,lmax,Ncell,Nodes);
 		}
 
 		compute_stimulus(stim,stim_current,t,Ncell,dx);
 		//print_stimulus(stim_current,Ncell,dx);
 		
-		solve_diffusion(sv,vm,beta,cm,sigma,dx,dt,Ncell,Nodes);
+		solve_diffusion(sv,vm,cell_mask,beta,cm,sigma,G,dx,d,dt,Ncell,Nodes);
 
 		update_state_vector(sv,vm,Ncell,Nodes);		
 		
@@ -166,9 +167,8 @@ void solve_monodomain (struct monodomain_solver *solver,\
 	printf("%s\n",PRINT_LINE);
 }
 
-void solve_diffusion (const double *sv, double *vm, const double beta, const double cm, const double sigma, const double dx, const double dt, const int ncell, const int nodes)
+void solve_diffusion (const double *sv, double *vm, bool *cell_mask, const double beta, const double cm, const double sigma, const double G, const double dx, const double d, const double dt, const int ncell, const int nodes)
 {
-
 	// Explicit: Finite Volume Method
 	#pragma omp parallel for
 	for (int i = 0; i < ncell; i++)
@@ -179,20 +179,41 @@ void solve_diffusion (const double *sv, double *vm, const double beta, const dou
 
 		// Case 1: First volume
 		if (i == 0)
-			east_flux = -sigma * ( (sv[nodes*(i+1)] - sv[nodes*i]) / dx ) * dx * dx;
+		{
+			if (cell_mask[i+1] == true)
+				east_flux = -G * (sv[nodes*(i+1)] - sv[nodes*i]);
+				//east_flux = -sigma * ( (sv[nodes*(i+1)] - sv[nodes*i]) / dx ) * (M_PI * d * d / 4.0);
+			else
+				east_flux = -sigma * ( (sv[nodes*(i+1)] - sv[nodes*i]) / dx ) * (M_PI * d * d / 4.0);
+		}
 		// Case 2: Last volume
 		else if (i == ncell-1)
-			west_flux = -sigma * ( (sv[nodes*i] - sv[nodes*(i-1)]) / dx ) * dx * dx;
+		{
+			if (cell_mask[i-1] == true)
+				west_flux = -G * (sv[nodes*i] - sv[nodes*(i-1)]);
+				//west_flux = -sigma * ( (sv[nodes*i] - sv[nodes*(i-1)]) / dx ) * (M_PI * d * d / 4.0);
+			else
+				west_flux = -sigma * ( (sv[nodes*i] - sv[nodes*(i-1)]) / dx ) * (M_PI * d * d / 4.0);
+		}
 		// Case 3: Middle volume
 		else
 		{
-			east_flux = -sigma * ( (sv[nodes*(i+1)] - sv[nodes*i]) / dx ) * dx * dx;
-			west_flux = -sigma * ( (sv[nodes*i] - sv[nodes*(i-1)]) / dx ) * dx * dx;
+			if (cell_mask[i+1] == true)
+				east_flux = -G * (sv[nodes*(i+1)] - sv[nodes*i]);
+				//east_flux = -sigma * ( (sv[nodes*(i+1)] - sv[nodes*i]) / dx ) * (M_PI * d * d / 4.0);
+			else
+				east_flux = -sigma * ( (sv[nodes*(i+1)] - sv[nodes*i]) / dx ) * (M_PI * d * d / 4.0);
+			
+			if (cell_mask[i-1] == true)
+				west_flux = -G * (sv[nodes*i] - sv[nodes*(i-1)]);
+				//west_flux = -sigma * ( (sv[nodes*i] - sv[nodes*(i-1)]) / dx ) * (M_PI * d * d / 4.0);
+			else
+				west_flux = -sigma * ( (sv[nodes*i] - sv[nodes*(i-1)]) / dx ) * (M_PI * d * d / 4.0);
 		}
 
 		total_flux = east_flux - west_flux;
 
-		vm[i] = sv[nodes*i] + ( (-total_flux / (beta*cm*dx*dx*dx) * dt) );
+		vm[i] = sv[nodes*i] + ( (-total_flux / (beta*cm*M_PI*d*d*dx/4.0) * dt) );
 	}	
 
 	// Implicit: Solve the linear system

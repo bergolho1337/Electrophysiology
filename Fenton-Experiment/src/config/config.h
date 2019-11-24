@@ -34,7 +34,7 @@ struct user_options
 	int n_cycles;
 
 	// Steady-State configuration section
-	std::string sst_filename;	
+	std::string sst_filename;
 
 };
 
