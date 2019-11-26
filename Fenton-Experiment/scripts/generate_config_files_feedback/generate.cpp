@@ -8,8 +8,8 @@ const int MAX_SIZE = 500;
 const double DT = 0.01;                 // {ms}
 const double N_CYCLES = 200.0;           
 const double CABLE_LENGTH = 1.0;        // {cm}
-const double DX = 0.005;                 // {cm}
-const int EXPERIMENT_NUMBER = 3;
+const double DX = 0.0025;                 // {cm}
+const int EXPERIMENT_NUMBER = 1;
 
 int SST_RATE = nearbyint(N_CYCLES/DT);
 

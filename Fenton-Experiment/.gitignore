@@ -1,7 +1,7 @@
 .vscode
 build/
 bin/
-vtk/
+vtk*/
 output/
 references/
 steady_state/

@@ -46,5 +46,5 @@ void configure_plot_from_options (struct plot_config *plotter, struct monodomain
 	plotter->print_rate = options->print_rate;
 	plotter->sst_rate = options->sst_rate;
 
-	printf("[plot] Output files will be saved inside the 'results' folder !\n");
+	printf("[Plot] Output state-vector files will be saved inside the 'results' folder !\n");
 }
