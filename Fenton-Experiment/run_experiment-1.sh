@@ -49,9 +49,9 @@ run_cable_simulation () {
 
     ./clear_results.sh
 
-    for PACING in "${PACINGS[@]}"; do
-        run_prepacing $PACING $1
-    done
+    #for PACING in "${PACINGS[@]}"; do
+    #    run_prepacing $PACING $1
+    #done
 
     for PACING in "${PACINGS[@]}"; do
         run_simulation $PACING $1
@@ -79,15 +79,15 @@ run_cable_simulation () {
 
 }
 
-CABLE_LENGTHS=("5" "4.5" "4" "3.5" "3" "2.5" "2" "1.5" "1")
-OFFSET_100=("400" "360" "320" "280" "240" "200" "160" "120" "80")
-OFFSET_400=("1600" "1440" "1280" "1120" "960" "800" "640" "480" "320")
-NUMBER_TESTS="8"
+#CABLE_LENGTHS=("5" "4.5" "4" "3.5" "3" "2.5" "2" "1.5" "1")
+#OFFSET_100=("400" "360" "320" "280" "240" "200" "160" "120" "80")
+#OFFSET_400=("1600" "1440" "1280" "1120" "960" "800" "640" "480" "320")
+#NUMBER_TESTS="8"
 
-#CABLE_LENGTHS=("5")
-#OFFSET_100=("400")
-#OFFSET_400=("1600")
-#NUMBER_TESTS="0"
+CABLE_LENGTHS=("4.5")
+OFFSET_100=("360")
+OFFSET_400=("1440")
+NUMBER_TESTS="0"
 
 for i in $(seq 0 1 $NUMBER_TESTS); do
     CABLE_LENGTH=${CABLE_LENGTHS[$i]}

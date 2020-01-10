@@ -20,8 +20,13 @@ def main():
                         #line = fp.readline()
                         if (len(line) > 0):
                                 data = line.split('|')
+                                modifiers = data[0].split()
                                 params = data[1].split()
                                 gates = data[4].split()
+
+                                hypoxia_mod = float(modifiers[0])
+                                hyperkelemia_mod = float(modifiers[1])
+                                acisosis_mod = float(modifiers[2])
 
                                 atpi = float(params[0])
                                 Ko = float(params[1])
@@ -43,6 +48,7 @@ def main():
                                     output_filepath = "outputs/atpi_%g-Ko_%g-Ki_%g-Vm:mod_%g-GNa:mod_%g-GCaL:mod_%g-INaCa:mod_%g" % (atpi,Ko,Ki,Vm_modifier,GNa_modifier,GCaL_modifier,INaCa_modifier)
                                     output_file = open(output_filepath,'w')
 
+                                    # First section: TT3 parameters
                                     output_file.write("%g\n" % (atpi))
                                     output_file.write("%g\n" % (Ko))
                                     output_file.write("%g\n" % (Ki))
@@ -51,8 +57,14 @@ def main():
                                     output_file.write("%g\n" % (GCaL_modifier))
                                     output_file.write("%g\n" % (INaCa_modifier))
 
+                                    # Second section: Steady-state variables 
                                     for i in range(12):
                                         output_file.write("%g\n" % (sv[i]))
+
+                                    # Third section: Modifier parameters
+                                    output_file.write("%g\n" % (hypoxia_mod))
+                                    output_file.write("%g\n" % (hyperkelemia_mod))
+                                    output_file.write("%g\n" % (acisosis_mod))
 
                                     output_file.close()
 
