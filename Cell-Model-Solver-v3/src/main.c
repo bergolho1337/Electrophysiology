@@ -32,7 +32,7 @@ int main (int argc, char **argv)
     }
 
     // The command line options always overwrite the config file
-    parse_options (argc, argv, options);
+    parse_options(argc, argv, options);
 
     // Create the output dir and the logfile
     if (options->out_dir_name) 
@@ -44,7 +44,7 @@ int main (int argc, char **argv)
         sdsfree (buffer);
     }
 
-    configure_ode_solver_from_options (ode_solver, options);
+    configure_ode_solver_from_options(ode_solver, options);
     
     solve_celular_model(ode_solver,options);
 

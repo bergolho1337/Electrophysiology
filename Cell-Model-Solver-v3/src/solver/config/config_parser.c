@@ -58,7 +58,7 @@ void display_usage (char **argv) {
     printf ("=======================================================================================================\n");
     printf ("Examples:\n");
     printf ("Mitchell-Shaeffer: ./bin/CellModelSolver -c examples/mitchell-shaeffer.ini\n");
-    printf ("Noble: ./bin/CellModelSolver -c examples/noble-1962.ini\n");
+    printf ("Noble: ./bin/CellModelSolver -c examples/noble_1962.ini\n");
     printf ("Ten-Tusscher: ./bin/CellModelSolver -c examples/ten_tusscher_2006.ini\n");
     printf ("=======================================================================================================\n");
 

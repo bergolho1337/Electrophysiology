@@ -13,8 +13,6 @@
 #include <assert.h>
 #include "../utils/logfile_utils.h"
 
-
-
 struct ode_solver* new_ode_solver() 
 {
     struct ode_solver* result = (struct ode_solver *) malloc(sizeof(struct ode_solver));
@@ -198,10 +196,12 @@ void solve_celular_model (struct ode_solver *solver, struct user_options *option
 
     }
 
-    print_to_stdout_and_file ("Resolution Time: %ld μs\n", stop_stop_watch (&solver_time));
-    print_to_stdout_and_file ("ODE Total Time: %ld μs\n", ode_total_time);
-    print_to_stdout_and_file ("Write time: %ld μs\n", total_write_time);
-    print_to_stdout_and_file ("Initial configuration time: %ld μs\n", total_config_time);
+    uint64_t res_time = stop_stop_watch(&solver_time);
+    double conv_rate = 1000.0 * 1000.0 * 60.0;
+    print_to_stdout_and_file ("Resolution Time: %ld μs (%lf min)\n", res_time, res_time / conv_rate);
+    print_to_stdout_and_file ("ODE Total Time: %ld μs (%lf min)\n", ode_total_time, ode_total_time / conv_rate);
+    print_to_stdout_and_file ("Write time: %ld μs (%lf min)\n", total_write_time, total_write_time / conv_rate);
+    print_to_stdout_and_file ("Initial configuration time: %ld μs (%lf min)\n", total_config_time, total_config_time / conv_rate);
     fclose(f1);
     
 }
@@ -361,7 +361,7 @@ void solve_odes (struct ode_solver *solver, double cur_time, int ode_step, struc
 
     // Get the reference to the solver function
     solve_model_ode_cpu_fn *solve_odes_pt = solver->solve_model_ode_cpu;
-    solve_odes_pt(dt, sv, merged_stims, ode_step, extra_data);
+    solve_odes_pt(dt, cur_time, sv, merged_stims, ode_step, extra_data);
 
 }
 

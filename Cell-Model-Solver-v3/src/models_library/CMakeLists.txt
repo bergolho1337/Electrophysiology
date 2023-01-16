@@ -71,3 +71,9 @@ set(COMMON_HEADERS model_common.h ten_tusscher_3_Fig4b.h)
 ADD_LIBRARY(ten_tusscher_3_Fig4b ${LIB_TYPE} ${COMMON_HEADERS} ${MODEL_FILE_CPU})
 
 #########################################################
+
+############## TORORD 2019 ##############################
+set(MODEL_FILE_CPU "ToRORd_fkatp_mixed_endo_myo_epi.c")
+set(COMMON_HEADERS model_common.h ToRORd_fkatp_mixed_endo_myo_epi.h)
+
+ADD_LIBRARY(ToRORd_fkatp_mixed_endo_myo_epi ${LIB_TYPE} ${COMMON_HEADERS} ${MODEL_FILE_CPU})

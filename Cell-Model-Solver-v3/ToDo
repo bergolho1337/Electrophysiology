@@ -1,3 +1,6 @@
+- Implement Rush-Larsen
+- Implement SAST2
+- Implement the Adaptative Explicit Euler
 - Implement the restitution curve calculus
 - Build extra_data as a library
 - Move this program to the 'scripts' folder of the MonoAlg3D project
